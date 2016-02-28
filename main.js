@@ -44,6 +44,8 @@ var shuffle = function(deck) {
   return shuffled;
 }
 
+startDeck = shuffle(startDeck);
+
 $('form').on('submit', function(e) {
   e.preventDefault();
   var name = $('#name').val();
@@ -55,10 +57,7 @@ $('form').on('submit', function(e) {
     finalCards.push(startDeck.pop());
     numOfCards--;
   }
-  finalCards = finalCards.concat(finalCards);
-  console.log(finalCards);
-  finalCards = shuffle(finalCards);
-  console.log(finalCards);
+  finalCards = shuffle(finalCards.concat(finalCards));
   $('form').hide();
   //insert name into greeting
   $('#belongs-to').text(name);
@@ -68,8 +67,9 @@ $('form').on('submit', function(e) {
     for (var j = 0; j < rows; j++) {
       //pop a card from the array and
       var $cardDiv = $('<div class="card" />');
-      var imageName = '<img src="assets/images/' + finalCards.pop() + '" />' ;
+      var imageName = '<img class="hidden" src="assets/images/' + finalCards.pop() + '" />' ;
       $cardDiv.append($(imageName));
+      $cardDiv.append('<div class="cover" />')
       //append div to row
       $rowOfDivs.append($cardDiv);
     }
@@ -78,4 +78,15 @@ $('form').on('submit', function(e) {
   }
 
   $('#game').toggleClass('hidden');
+});
+
+//on clicking card, toggle class of hidden to .cover and .card items
+$('#game').on('click', '.cover', function(e) {
+  $(this).toggleClass('hidden');
+  $(this).prev().toggleClass('hidden');
+});
+
+$('#game').on('click', 'img', function(e) {
+  $(this).toggleClass('hidden');
+  $(this).next().toggleClass('hidden');
 });
