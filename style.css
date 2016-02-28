@@ -1,3 +1,9 @@
+#winning {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+}
+
 .card, .cover {
   margin: 20px;
   width: 50px;
@@ -11,4 +17,8 @@
 
 .hidden {
   display: none;
+}
+
+.unclickable {
+  pointer-events: none;
 }

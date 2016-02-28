@@ -35,7 +35,8 @@ var startDeck = [
 ];
 
 var openCards = 0;
-var $firstCard, $firstCover;
+var totalOpen = 0;
+var $firstImg, $firstCover, totalCards;
 
 var shuffle = function(deck) {
   var shuffled = [];
@@ -56,7 +57,8 @@ $('form').on('submit', function(e) {
   var rows = parseInt($('input[name="number"]:checked').val());
   var $rowOfDivs;
   var finalCards = [];
-  var numOfCards = (rows * rows) / 2;
+  totalCards = rows * rows;
+  var numOfCards = (totalCards) / 2;
   //create a new deck with only n/2 cards
   while (numOfCards) {
     finalCards.push(startDeck.pop());
@@ -85,21 +87,41 @@ $('form').on('submit', function(e) {
 //on clicking card, toggle hidden class for .cover and .card items
 $('#game').on('click', '.cover', function(e) {
   //track how many cards are open
-  openCards++;
-  $this = $(this);
-  $(this).toggleClass('hidden');
-  $(this).prev().toggleClass('hidden');
+  openCards++; // 2
+  totalOpen++; // 2
+  var $this = $(this);
+  var $img = $this.prev(); //ball image
+  $this.toggleClass('hidden');
+  $img.toggleClass('hidden'); //ball image shows
+
   if (openCards === 2) {
+    //if the two cards don't match, turn them back over
+    console.log('second: ', $img.attr('src'), 'first: ', $firstImg.attr('src'))
+    if (!($img.attr('src') === $firstImg.attr('src'))) {
+      setTimeout(function() {
+        $this.toggleClass('hidden');
+        $img.toggleClass('hidden');
+        $firstImg.toggleClass('hidden');
+        $firstCover.toggleClass('hidden');
+        //allow cards to be clicked again
+
+
+      }, 1000);
+    }
+    openCards = 0;
+    totalOpen = 0;
+    //make cards unclickable
+    $('.cover').toggleClass('unclickable');
     setTimeout(function() {
-      $this.toggleClass('hidden');
-      $this.prev().toggleClass('hidden');
-      console.log($firstCard, $firstCover);
-      $firstCard.toggleClass('hidden');
-      $firstCover.toggleClass('hidden');
-      openCards = 0;
+      $('.cover').toggleClass('unclickable');
     }, 1000);
   } else {
-    $firstCard = $(this).prev();
-    $firstCover = $(this);
+    $firstImg = $img; //wolf
+    $firstCover = $this;
   }
 });
+
+if (totalOpen === 4) {
+  //open a modal saying 'you won!' with a button to restart
+
+}
