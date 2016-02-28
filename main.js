@@ -87,41 +87,40 @@ $('form').on('submit', function(e) {
 //on clicking card, toggle hidden class for .cover and .card items
 $('#game').on('click', '.cover', function(e) {
   //track how many cards are open
-  openCards++; // 2
-  totalOpen++; // 2
   var $this = $(this);
-  var $img = $this.prev(); //ball image
+  var $img = $this.prev();
+  openCards++;
+  totalOpen++;
   $this.toggleClass('hidden');
-  $img.toggleClass('hidden'); //ball image shows
+  $img.toggleClass('hidden');
 
   if (openCards === 2) {
     //if the two cards don't match, turn them back over
-    console.log('second: ', $img.attr('src'), 'first: ', $firstImg.attr('src'))
     if (!($img.attr('src') === $firstImg.attr('src'))) {
       setTimeout(function() {
         $this.toggleClass('hidden');
         $img.toggleClass('hidden');
         $firstImg.toggleClass('hidden');
         $firstCover.toggleClass('hidden');
-        //allow cards to be clicked again
-
-
       }, 1000);
+      totalOpen -= 2;
     }
     openCards = 0;
-    totalOpen = 0;
     //make cards unclickable
     $('.cover').toggleClass('unclickable');
+    //allow cards to be clicked again
     setTimeout(function() {
       $('.cover').toggleClass('unclickable');
     }, 1000);
   } else {
-    $firstImg = $img; //wolf
+    $firstImg = $img;
     $firstCover = $this;
+  }
+
+  if (totalOpen === totalCards) {
+    //open a modal saying 'you won!' with a button to restart
+    alert('You won!');
   }
 });
 
-if (totalOpen === 4) {
-  //open a modal saying 'you won!' with a button to restart
 
-}

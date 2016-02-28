@@ -1,3 +1,4 @@
-# Sites I built
+# Memory Game
 
-I love building things in JavaScript, HTML and CSS. This is a repo full of stuff I've built.
+An in-browser Memory game made with love, for my niece Madi.
+Built with jQuery, JS, HTML and CSS.
