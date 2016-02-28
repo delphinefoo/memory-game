@@ -34,6 +34,9 @@ var startDeck = [
   'wolf_PNG347.png'
 ];
 
+var openCards = 0;
+var $firstCard, $firstCover;
+
 var shuffle = function(deck) {
   var shuffled = [];
   while (deck.length) {
@@ -44,6 +47,7 @@ var shuffle = function(deck) {
   return shuffled;
 }
 
+//shuffle starting deck
 startDeck = shuffle(startDeck);
 
 $('form').on('submit', function(e) {
@@ -53,6 +57,7 @@ $('form').on('submit', function(e) {
   var $rowOfDivs;
   var finalCards = [];
   var numOfCards = (rows * rows) / 2;
+  //create a new deck with only n/2 cards
   while (numOfCards) {
     finalCards.push(startDeck.pop());
     numOfCards--;
@@ -65,28 +70,36 @@ $('form').on('submit', function(e) {
   for (var i = 0; i < rows; i++) {
     $rowOfDivs = $('<div class="row" />');
     for (var j = 0; j < rows; j++) {
-      //pop a card from the array and
       var $cardDiv = $('<div class="card" />');
       var imageName = '<img class="hidden" src="assets/images/' + finalCards.pop() + '" />' ;
       $cardDiv.append($(imageName));
       $cardDiv.append('<div class="cover" />')
-      //append div to row
       $rowOfDivs.append($cardDiv);
     }
-
     $('#game').append($rowOfDivs);
   }
 
   $('#game').toggleClass('hidden');
 });
 
-//on clicking card, toggle class of hidden to .cover and .card items
+//on clicking card, toggle hidden class for .cover and .card items
 $('#game').on('click', '.cover', function(e) {
+  //track how many cards are open
+  openCards++;
+  $this = $(this);
   $(this).toggleClass('hidden');
   $(this).prev().toggleClass('hidden');
-});
-
-$('#game').on('click', 'img', function(e) {
-  $(this).toggleClass('hidden');
-  $(this).next().toggleClass('hidden');
+  if (openCards === 2) {
+    setTimeout(function() {
+      $this.toggleClass('hidden');
+      $this.prev().toggleClass('hidden');
+      console.log($firstCard, $firstCover);
+      $firstCard.toggleClass('hidden');
+      $firstCover.toggleClass('hidden');
+      openCards = 0;
+    }, 1000);
+  } else {
+    $firstCard = $(this).prev();
+    $firstCover = $(this);
+  }
 });
